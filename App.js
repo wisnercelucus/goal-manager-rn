@@ -1,11 +1,24 @@
 import {useState} from 'react'
 
-import { StyleSheet, View, FlatList } from 'react-native';
+import { StatusBar } from 'expo-status-bar';
+
+import { StyleSheet, View, FlatList, Button } from 'react-native';
+
 import GoalItem  from './components/GoalItem';
 import GoalInput from './components/GoalInput';
 
+
 export default function App() {
+  const [modalIsVisible, setModalIsVisible] = useState(false)
   const [courseGoals, setCourseGoals] = useState([]);
+
+  openAddGoalModalHandler = () => {
+    setModalIsVisible(true)
+  }
+
+  closeAddGoalModalHandler = () => {
+    setModalIsVisible(false)
+  }
 
   addGoalHandler = (enteredGoal)=> {
    setCourseGoals(
@@ -14,6 +27,8 @@ export default function App() {
       {text: enteredGoal, 
       key: new Date().toISOString() + '_' + Math.random().toString()}
     ])
+
+    closeAddGoalModalHandler()
   }
 
   deleteGoalHandler = (id) =>{
@@ -23,8 +38,11 @@ export default function App() {
   }
 
   return (
+    <>
+    <StatusBar style='light' />
     <View style={styles.appContainer}>
-      <GoalInput onAddGoal={addGoalHandler} />
+      <Button title="Add new goal" color='#5e0acc' onPress={openAddGoalModalHandler}></Button>
+      <GoalInput visible={modalIsVisible} onCloseModal={closeAddGoalModalHandler} onAddGoal={addGoalHandler} />
     <View style={styles.goalsContainer}>
     <FlatList
 
@@ -40,6 +58,7 @@ export default function App() {
     />
     </View>
   </View>
+  </>
   );
 
  /* return (
@@ -57,6 +76,7 @@ export default function App() {
       </ScrollView>
       </View>
     </View>
+    
   );*/
 }
 
@@ -64,7 +84,7 @@ const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
     paddingTop: 50,
-    paddingHorizontal: 16
+    paddingHorizontal: 16,
   },
   
   goalsContainer: {
