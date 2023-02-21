@@ -11,10 +11,40 @@ export default function App() {
   }
 
   addGoalHandler = ()=> {
-   setCourseGoals((currentCourseGoals) => [...currentCourseGoals, enteredGoal])
+   setCourseGoals(
+    (currentCourseGoals) => 
+    [...currentCourseGoals, 
+      {text: enteredGoal, 
+      key: new Date().toISOString() + '_' + Math.random().toString()}
+    ])
   }
 
   return (
+    <View style={styles.appContainer}>
+    <View style={styles.inputContainer}>
+      <TextInput style={styles.textInput} title="Enter goal" onChangeText={goalInputHandler} />
+      <Button title ="Add goal" onPress={addGoalHandler} />
+    </View>
+    <View style={styles.goalsContainer}>
+    <FlatList
+
+    data={courseGoals} renderItem={itemData => {
+      return (
+        <View style={styles.goalItemContainer}>
+          <Text style={styles.goalItem}>{itemData.item.text}</Text>
+        </View>
+      )
+    }} 
+    keyExtractor={(item, index)=> {
+      return item.key
+    }}
+    alwaysBounceVertical={false} 
+    />
+    </View>
+  </View>
+  );
+
+ /* return (
     <View style={styles.appContainer}>
       <View style={styles.inputContainer}>
         <TextInput style={styles.textInput} title="Enter goal" onChangeText={goalInputHandler} />
@@ -22,14 +52,14 @@ export default function App() {
       </View>
       <View style={styles.goalsContainer}>
       <ScrollView>
-      {courseGoals.map(goal =>(<View style={styles.goalItemContainer} key={goal}>
+      {courseGoals.map(goal =>(<View style={styles.goalItemContainer} key={new Date().toISOString() + '_' + Math.random().toString()}>
         <Text style={styles.goalItem}>{goal}</Text>
       </View>)
       )}
       </ScrollView>
       </View>
     </View>
-  );
+  );*/
 }
 
 const styles = StyleSheet.create({
